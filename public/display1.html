@@ -1,0 +1,134 @@
+<!-- display2.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tennis Score Display 2</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: white;
+        margin: 0;
+      }
+      .header {
+        background-color: #156c8e;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .display2-score {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        height: 70vh;
+      }
+      .team-names {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+      .team-name {
+        font-size: 50px;
+        padding: 10px 20px;
+        text-align: center;
+        margin-top: 20px;
+      }
+      .team1 {
+        background-color: #87ceeb;
+      }
+      .team2 {
+        background-color: #dda0dd;
+      }
+      .large-score {
+        font-size: 250px;
+        margin: 0 40px;
+        padding: 30px;
+        background-color: #1a365d;
+        color: white;
+        border-radius: 20px;
+        min-width: 300px;
+        text-align: center;
+      }
+      .points-container {
+        display: flex;
+        justify-content: end;
+        gap: 20px;
+      }
+      .point-display {
+        font-size: 50px;
+        padding: 20px;
+        background-color: #c65102;
+        color: white;
+        border-radius: 10px;
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .container-display {
+        display: flex;
+        gap: 50px;
+        height: 85vh;
+        align-items: center;
+        justify-content: center;
+      }
+      .containter-team {
+        display: flex;
+        flex-direction: column;
+      }
+      .containter-score {
+        display: flex;
+        align-items: end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1 id="venue">-</h1>
+      <div id="date">Bekasi, 13 Agustus 2024</div>
+    </div>
+
+    <div class="container-display">
+      <div class="containter-team">
+        <div class="containter-score">
+          <div class="large-score" id="score1">00</div>
+          <div class="point-display" id="points1">00</div>
+        </div>
+        <div>
+          <div class="team-name team1" id="team1-name">-</div>
+        </div>
+      </div>
+
+      <div class="containter-team">
+        <div class="containter-score">
+          <div class="point-display" id="points2">00</div>
+          <div class="large-score" id="score2">00</div>
+        </div>
+        <div>
+          <div class="team-name team2" id="team2-name">-</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const evtSource = new EventSource("http://localhost:3000/events");
+
+      evtSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        document.getElementById("venue").textContent = data.venue;
+        document.getElementById("date").textContent = data.date;
+        document.getElementById("team1-name").textContent = data.team1.name;
+        document.getElementById("team2-name").textContent = data.team2.name;
+
+        document.getElementById("score1").textContent = data.team1.score;
+        document.getElementById("score2").textContent = data.team2.score;
+        document.getElementById("points1").textContent = data.team1.points;
+        document.getElementById("points2").textContent = data.team2.points;
+      };
+    </script>
+  </body>
+</html>

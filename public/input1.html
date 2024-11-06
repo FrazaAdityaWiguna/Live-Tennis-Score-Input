@@ -1,0 +1,163 @@
+<!-- controller2.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tennis Score Controller 1</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f0f0f0;
+      }
+      .control-panel {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: auto;
+      }
+      .input-group {
+        margin: 15px 0;
+      }
+      .input-row {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      input {
+        padding: 8px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #156c8e;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1rem;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #0f4c6a;
+      }
+      h1,
+      h2 {
+        color: #156c8e;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="control-panel">
+      <h1>Display 1 Controller</h1>
+
+      <div class="input-group">
+        <h2>Game Score Settings</h2>
+        <div class="input-row">
+          <div>
+            <label for="score1-input">Score 1:</label>
+            <input type="number" id="score1-input" min="0" placeholder="Score 1" />
+          </div>
+          <div>
+            <label for="score2-input">Score 2:</label>
+            <input type="number" id="score2-input" min="0" placeholder="Score 2" />
+          </div>
+        </div>
+
+        <h2>Points Settings</h2>
+        <div class="input-row">
+          <div>
+            <label for="points1-input">Points 1:</label>
+            <input type="number" id="points1-input" min="0" placeholder="Points 1" />
+          </div>
+          <div>
+            <label for="points2-input">Points 2:</label>
+            <input type="number" id="points2-input" min="0" placeholder="Points 2" />
+          </div>
+        </div>
+
+        <h2>Name Settings</h2>
+        <div class="input-row">
+          <div>
+            <label for="venue">Venue Name:</label>
+            <input type="text" id="venue" placeholder="Name venue" />
+          </div>
+        </div>
+        <div class="input-row">
+          <div>
+            <label for="team1-name">Player 1 Name:</label>
+            <input type="text" id="team1-name" placeholder="Name Player 1" />
+          </div>
+          <div>
+            <label for="team2-name">Player 2 Name:</label>
+            <input type="text" id="team2-name" placeholder="Name Player 2" />
+          </div>
+        </div>
+
+        <button onclick="updateDisplay2()">Update Display</button>
+      </div>
+    </div>
+
+    <script>
+      const evtSource = new EventSource("http://localhost:3000/events");
+
+      evtSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        
+        document.getElementById("venue").value = data.venue;
+        document.getElementById("team1-name").value = data.team1.name;
+        document.getElementById("team2-name").value = data.team2.name;
+
+        document.getElementById("score1-input").value = data.team1.score;
+        document.getElementById("score2-input").value = data.team2.score;
+        document.getElementById("points1-input").value = data.team1.points;
+        document.getElementById("points2-input").value = data.team2.points;
+      };
+
+      function updateDisplay2() {
+        const data = {
+          venue: document.getElementById("venue").value,
+          team1: {
+            name: document.getElementById("team1-name").value,
+            score: document.getElementById("score1-input").value,
+            points: document.getElementById("points1-input").value,
+          },
+          team2: {
+            name: document.getElementById("team2-name").value,
+            score: document.getElementById("score2-input").value,
+            points: document.getElementById("points2-input").value,
+          },
+        };
+        // Validasi input untuk memastikan angka positif atau nol
+        const { team1, team2 } = data
+        if (team1.score === "" || team1.points === "" || team2.score < 0 || team2.points < 0) {
+          alert("Masukkan nilai yang valid (0 atau lebih) untuk kedua skor.");
+          return;
+        }
+
+        fetch("http://localhost:3000/update-display2", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then(() => alert("Score updated successfully!"))
+          .catch((error) => console.error("Error updating score:", error));
+      }
+    </script>
+  </body>
+</html>

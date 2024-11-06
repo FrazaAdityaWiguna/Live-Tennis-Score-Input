@@ -1,0 +1,111 @@
+<!-- display1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Score Display 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .header {
+            background-color: #156c8e;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .score-display {
+            margin: 20px;
+            display: flex;
+            height: 80vh;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .team-row {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+        .team1 { background-color: #87CEEB; }
+        .team2 { background-color: #DDA0DD; }
+        .team-name {
+            flex: 1;
+            color: white;
+            font-size: 70px;
+            padding: 10px;
+        }
+        .score-box {
+            min-width: 90px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            background-color: #1a365d;
+            color: white;
+            font-size: 70px;
+        }
+        .points-box {
+            min-width: 90px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            background-color: #666;
+            color: white;
+            font-size: 70px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 id="venue">BUANA TENIS COURT</h1>
+        <div id="date">Bekasi, 13 Agustus 2024</div>
+    </div>
+
+    <div class="score-display">
+        <div class="team-row team1">
+            <div class="team-name" id="team1-name">AWIT/YUDI</div>
+            <div class="score-box" id="team1-sets">0</div>
+            <div class="score-box" id="team1-games">0</div>
+            <div class="points-box" id="team1-points">0</div>
+        </div>
+        <div class="team-row team2">
+            <div class="team-name" id="team2-name">ASLAM/DWI</div>
+            <div class="score-box" id="team2-sets">0</div>
+            <div class="score-box" id="team2-games">0</div>
+            <div class="points-box" id="team2-points">0</div>
+        </div>
+    </div>
+
+    <script>
+        const evtSource = new EventSource('http://localhost:3000/events')
+        
+        
+        evtSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            document.getElementById('venue').textContent = data.venue;
+            document.getElementById('date').textContent = data.date;
+            
+            document.getElementById('team1-name').textContent = data.team1.name;
+            document.getElementById('team1-sets').textContent = data.team1.sets;
+            document.getElementById('team1-games').textContent = data.team1.games;
+            document.getElementById('team1-points').textContent = data.team1.points;
+            
+            document.getElementById('team2-name').textContent = data.team2.name;
+            document.getElementById('team2-sets').textContent = data.team2.sets;
+            document.getElementById('team2-games').textContent = data.team2.games;
+            document.getElementById('team2-points').textContent = data.team2.points;
+        };
+    </script>
+</body>
+</html>

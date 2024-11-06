@@ -9,8 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Aplikasi ini memungkinkan pengguna untuk memasukkan dan memperbarui skor tenis secara langsung. Skor yang dimasukkan akan dikirim ke server dan dapat ditampilkan secara real-time.",
   "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
     "express": "^4.21.1"
   }
 }
